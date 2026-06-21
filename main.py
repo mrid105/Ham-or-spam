@@ -41,8 +41,7 @@ def main():
     detector.train()
 
     detector.evaluate()
-
-    # DATA VISUALIZATION (bar chart) -- to be implemented -- can use SpamDetector.plot_distribution() function here
+    detector.plot_distribution()
 
     while True:
         try:
@@ -57,10 +56,9 @@ def main():
             print("Please type something.")
             continue
 
-        label = detector.predict_message(message)
+        label, confidence = detector.predict_message(message)
         print(f"Prediction: {label.upper()}")
-
-        # CONFIDENCE SCORE -- to be implemented -- can use SpamDetector.predict_message() function here
+        print(f"Confidence: {confidence:.1f}%") 
 
     print("Goodbye!")
 

@@ -111,13 +111,24 @@ class SpamDetector:
         features = self.vectorizer.transform([text])
         label = self.model.predict(features)[0]
 
-        # CONFIDENCE SCORE  --  to be implemented 
+        probablities = self.model.predict_proba(features)[0]
+        class_index = list(self.model.classes_).index(label)
+        confidence = probablities[class_index]*100
 
-        return label
+        return label, confidence
 
     def plot_distribution(self):
         """Draw/save a bar chart of how many spam vs ham messages exist."""
-
-        # DATA VISUALIZATION  --  to be implemented 
+        counts = self.df["label"].value_counts()
+        plt.figure(figsize=(6, 4))
+        sns.barplot(x=counts.index, y=counts.values, hue=counts.index, palette={"ham":"#6B83AA", "spam":"#8DC571"}, legend=False)
+        plt.title("Distribution of Ham vs Spam Messages")
+        plt.xlabel("Message Type")
+        plt.ylabel("Number of Messages")
         
-        pass
+        for i, count in enumerate(counts.values):
+            plt.text(i, count+max(counts.values)*0.01, str(count), ha='center', va='bottom', fontweight='bold')
+        
+        plt.tight_layout()
+        plt.savefig("spam_ham_distribution.png", dpi = 150)
+        plt.close()
